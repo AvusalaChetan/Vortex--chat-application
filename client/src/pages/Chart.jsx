@@ -1,4 +1,4 @@
-import React from 'react'
+import AppLayout from '../components/layout/AppLayout'
 
 const Chart = () => {
   return (
@@ -6,4 +6,4 @@ const Chart = () => {
   )
 }
 
-export default Chart
+export default AppLayout(Chart)

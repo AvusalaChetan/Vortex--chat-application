@@ -12,9 +12,13 @@ import {CameraAlt} from "@mui/icons-material";
 import {Stack} from "@mui/system";
 import {VisuallyHiddenInput} from "../components/StyledComponent";
 import {useForm} from "react-hook-form";
+import Oauth from "../components/auth/Oauth";
+import { useFileHandler } from '6pp'
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
+const [filePath, setFilePath] = useState('')
+const profile = useFileHandler('single')
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -27,7 +31,7 @@ const Login = () => {
     if (/[A-Z]/.test(p)) score++;
     if (/[0-9]/.test(p)) score++;
     if (/[^A-Za-z0-9]/.test(p)) score++;
-    return score; 
+    return score;
   }
 
   const {
@@ -37,13 +41,7 @@ const Login = () => {
     reset,
   } = useForm();
 
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      console.log("picked file", file);
-    }
-  };
-
+ 
   const onSubmit = (data) => {};
 
   return (
@@ -55,7 +53,6 @@ const Login = () => {
           alignItems: "center",
           justifyContent: "center",
           height: "100vh",
-        
         }}
       >
         <Paper
@@ -81,6 +78,7 @@ const Login = () => {
                   required
                   fullWidth
                   label="username"
+                  autoComplete="username"
                   type="text"
                   margin="normal"
                   variant="outlined"
@@ -107,6 +105,7 @@ const Login = () => {
                   fullWidth
                   label="password"
                   type="password"
+                  autoComplete="current-password"
                   margin="normal"
                   variant="outlined"
                   error={!!errors.password}
@@ -142,6 +141,8 @@ const Login = () => {
                   sign up{" "}
                 </Button>
               </form>
+<Oauth />
+
             </>
           ) : (
             <>
@@ -163,6 +164,7 @@ const Login = () => {
                     height: "10rem",
                     objectFit: "contain",
                   }}
+                  src={profile.preview}
                 />
 
                 <IconButton
@@ -179,7 +181,7 @@ const Login = () => {
                   <VisuallyHiddenInput
                     type="file"
                     accept="image/*"
-                    onChange={handleFileChange}
+                    onChange={profile.changeHandler}
                   />
                 </IconButton>
               </Stack>
@@ -242,6 +244,7 @@ const Login = () => {
                   required
                   fullWidth
                   label="username"
+                  autoComplete="username"
                   type="text"
                   margin="normal"
                   variant="outlined"
@@ -264,6 +267,7 @@ const Login = () => {
                   fullWidth
                   label="password"
                   type="password"
+                  autoComplete="new-password"
                   margin="normal"
                   variant="outlined"
                   error={!!errors.password}
