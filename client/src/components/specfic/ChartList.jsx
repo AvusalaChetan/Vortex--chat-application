@@ -12,7 +12,9 @@ const ChartList = ({
 
   
   return (
-    <Stack width={w} direction={"column"}>
+    <Stack width={w} direction={"column"}
+
+    >
       {chats?.map((data) => {
         const {avatar, _id, name, groupChat, members} = data;
 
@@ -36,6 +38,7 @@ const ChartList = ({
             groupChat={groupChat}
             sameSender={chatId === _id}
             handleDleteChat={handleDleteChat}
+
           />
         );
       })}
