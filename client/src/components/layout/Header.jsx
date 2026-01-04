@@ -7,6 +7,7 @@ import {
   Toolbar,
   Typography,
   Tooltip,
+  Backdrop,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -93,17 +94,17 @@ const Header = () => {
       </Box>
 
       {isSearch && (
-        <Suspense fallback={<div> loading ... </div>}>
+        <Suspense fallback={<Backdrop open />}>
           <SearchBar />
         </Suspense>
       )}
       {isNewGroup && (
-        <Suspense fallback={<div> loading ... </div>}>
+        <Suspense fallback={<Backdrop open />}>
           <NewGroup />
         </Suspense>
       )}
       {isNotification && (
-        <Suspense fallback={<div> loading ... </div>}>
+        <Suspense fallback={<Backdrop open />}>
           <Notificaiton />
         </Suspense>
       )}
