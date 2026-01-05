@@ -1,2 +1,2 @@
 # vortex AI Powered Chat Application 
-2:12
+2:18

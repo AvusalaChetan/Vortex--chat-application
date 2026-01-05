@@ -38,6 +38,8 @@ const AppLayout = (WrappedComponent) => {
               height: "100%",
               ml: 0.5,
               display: {xs: "none", sm: "none", md: "block"},
+              width:'25%',
+              border:'1px solid red'
             }}
           >
             <ChartList
