@@ -1,7 +1,6 @@
 import {useState} from "react";
 import {
   Dialog,
-  Box,
   Stack,
   TextField,
   DialogTitle,
@@ -74,7 +73,7 @@ const SearchBar = ({InputProps = {}, open = true, onClose }) => {
               <UserItem
                 user={user}
                 key={user._id}
-                handle={addFriendHandler}
+                handler={addFriendHandler}
                 handlerIsLoading={isLoadingSendFriendRequest}
               />
             </ListItem>

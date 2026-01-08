@@ -25,21 +25,29 @@ const AppLayout = (WrappedComponent) => {
           sx={{
             height: "calc(100vh - 4rem)",
             width: "100%",
-            justifyContent: "space-between",
-            alignItems: "center",
+            padding: "0.2rem 0.5rem",
+            boxSizing: "border-box",
+            // justifyContent: "space-between",
+            alignItems: "stretch",
+            columnGap: {md: 2, lg: 4},
           }}
         >
+          {/* //left */}
           <Grid
             item
             xs={12}
-            md={3}
-            lg={2.5}
+            md={4}
+            lg={3}
             sx={{
               height: "100%",
               ml: 0.5,
               display: {xs: "none", sm: "none", md: "block"},
-              width:'25%',
-              border:'1px solid red'
+              borderRight: 1,
+              borderColor: "divider",
+              pr: 2,
+              overflowY: "auto",
+              bgcolor: "background.paper",
+              width: {lg: "20%", md: "33%"},
             }}
           >
             <ChartList
@@ -49,32 +57,36 @@ const AppLayout = (WrappedComponent) => {
             />
           </Grid>
 
+          {/* chat mgs (or) middle part */}
           <Grid
             item
             xs={12}
             md={8}
-            lg={4}
+            lg={5}
             sx={{
               height: "100%",
-              bgcolor: "background.paper",
+              width: {lg: "55%", md: "60%", sm: "100%"},
               p: 2,
-              width: {lg: "33%", md: "50%", sm: "90%", xs: "100%"},
+              overflow: "hidden",
+              borderRadius: 2,
+              boxShadow: {md: 1, lg: 1},
             }}
           >
             <WrappedComponent {...props} />
           </Grid>
 
+          {/* user info part */}
           <Grid
             item
             xs={12}
-            lg={4}
+            lg={4}  
             sx={{
               height: "100%",
+              width: {lg: "20%"},
               p: 2,
-              width: "22%",
-              border: " ",
               bgcolor: "black",
               color: "white",
+
               display: {xs: "none", sm: "none", md: "none", lg: "block"},
             }}
           >

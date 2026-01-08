@@ -6,20 +6,20 @@ import NotFound from "./pages/NotFound";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
-const Chart = lazy(() => import("./pages/Chart"));
+const Chat = lazy(() => import("./pages/Chart"));
 const Group = lazy(() => import("./pages/Group"));
 
 let user = true;
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter> 
       <Suspense fallback={<LayOutLoader />}>
         <Routes>
           <Route element={<ProtectRoute user={user} />}>
             <Route path="/" element={<Home />} />
-            <Route path="/chat/:chatId" element={<Home />} />
-            <Route path="/group" element={<Group />} />
+            <Route path="/chat/:chatId" element={<Chat />} />
+            <Route path="/groups" element={<Group />} />
           </Route>
           <Route
             path="/login"

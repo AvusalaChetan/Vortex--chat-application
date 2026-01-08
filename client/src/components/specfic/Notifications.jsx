@@ -18,6 +18,7 @@ const Notifications = ({open = true, onClose}) => {
   };
 
   return (
+  <>
     <Dialog
       open={open}
       onClose={onClose}
@@ -52,8 +53,11 @@ const Notifications = ({open = true, onClose}) => {
         )}
       </Stack>
     </Dialog>
+  </>
   );
 };
+
+
 
 const NotificationItem = memo(({sender, _id, handler}) => {
   const {name, avatar} = sender;

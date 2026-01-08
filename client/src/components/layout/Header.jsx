@@ -30,6 +30,7 @@ const Header = () => {
   const [isSearch, setIsSearch] = useState(false);
   const [isNewGroup, setIsNewGroup] = useState(false);
   const [isNotification, setIsNotification] = useState(false);
+  
 
   const handleMobile = () => setIsMobile((p) => !p);
   const openSearchBar = () => setIsSearch((p) => !p);
@@ -37,6 +38,7 @@ const Header = () => {
   const toggleNotification = () => setIsNotification((p) => !p);
 
   const navigateToGroup = () => navigate("/groups");
+  
   const handleLogOut = () => {
     console.log("handleLogOut");
   };
