@@ -18,10 +18,8 @@ export const Link = styled(LinkComponet)`
   text-decoration: none;
   color: gray;
   padding: 1rem;
+  display: block;
   background-color: white;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
 `;
 
 export const InputBox = styled("input")`

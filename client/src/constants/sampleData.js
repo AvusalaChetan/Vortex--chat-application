@@ -193,3 +193,66 @@ export const sampleMessages = [
     createdAt: "2024-06-01T10:01:00Z"
   },
 ]
+
+
+
+
+
+export const sampleGroups = [
+  {
+    _id: "g1",
+    name: "Design Team",
+    subtitle: "UI/UX discussions",
+    members: ["A", "B", "C", "D"],
+    cover:
+      "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1400&q=80",
+  },
+  {
+    _id: "g2",
+    name: "Frontend Devs",
+    subtitle: "React, MUI & tooling",
+    members: ["G", "H", "I"],
+    cover:
+      "https://images.unsplash.com/photo-1542744095-291d1f67b221?w=1400&q=80",
+  },
+  {
+    _id: "g3",
+    name: "Product",
+    subtitle: "Roadmap & specs",
+    members: ["X", "Y"],
+    cover:
+      "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?w=1400&q=80",
+  },
+  {
+    _id: "g4",
+    name: "Backend Engineers",
+    subtitle: "APIs, services & infra",
+    members: ["M", "N", "O"],
+    cover:
+      "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=1400&q=80",
+  },
+  {
+    _id: "g5",
+    name: "QA",
+    subtitle: "Testing & reliability",
+    members: ["Q", "R"],
+    cover:
+      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&q=80",
+  },
+  {
+    _id: "g6",
+    name: "Marketing",
+    subtitle: "Growth & comms",
+    members: ["S", "T", "U"],
+    cover:
+      "https://images.unsplash.com/photo-1492496913980-501348b61469?w=1400&q=80",
+  },
+  {
+    _id: "g7",
+    name: "Operations",
+    subtitle: "SRE & platform",
+    members: ["V", "W"],
+    cover:
+      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1400&q=80",
+  },
+];

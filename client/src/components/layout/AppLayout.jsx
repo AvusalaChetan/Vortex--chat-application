@@ -15,6 +15,7 @@ const AppLayout = (WrappedComponent) => {
       e.preventDefault();
       console.log("delet chat", _id, groupChat);
     };
+  
 
     return (
       <>
@@ -34,10 +35,7 @@ const AppLayout = (WrappedComponent) => {
         >
           {/* //left */}
           <Grid
-            item
-            xs={12}
-            md={4}
-            lg={3}
+            size={{xs: 12, md: 4, lg: 3}}
             sx={{
               height: "100%",
               ml: 0.5,
@@ -59,10 +57,7 @@ const AppLayout = (WrappedComponent) => {
 
           {/* chat mgs (or) middle part */}
           <Grid
-            item
-            xs={12}
-            md={8}
-            lg={5}
+            size={{xs: 12, md: 8, lg: 5}}
             sx={{
               height: "100%",
               width: {lg: "55%", md: "60%", sm: "100%"},
@@ -77,9 +72,7 @@ const AppLayout = (WrappedComponent) => {
 
           {/* user info part */}
           <Grid
-            item
-            xs={12}
-            lg={4}  
+            size={{xs: 12, lg: 4}}
             sx={{
               height: "100%",
               width: {lg: "20%"},
