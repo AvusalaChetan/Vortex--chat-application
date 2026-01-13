@@ -22,20 +22,23 @@ export const Link = styled(LinkComponet)`
   background-color: white;
 `;
 
-export const InputBox = styled("input")`
-  width: 100%;
-  height: 100%;
-  border: 1px solid #e0e0e0;
-  outline: none;
-  padding: 0.75rem 1rem;
-  border-radius: 1.5rem;
-  font-size: 0.95rem;
-  background-color: #fff;
-  box-sizing: border-box;
-  transition: border-color 0.2s, box-shadow 0.2s;
-
-  &:focus {
-    border-color: #1976d2;
-    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
-  }
-`;
+export const InputBox = styled("input")(({ theme }) => ({
+  width: "100%",
+  height: "100%",
+  border: "1px solid #e0e0e0",
+  outline: "none",
+  padding: "0.75rem 1rem",
+  borderRadius: "1.5rem",
+  fontSize: "0.95rem",
+  backgroundColor: "#fff",
+  boxSizing: "border-box",
+  transition: "border-color 0.2s, box-shadow 0.2s",
+  [theme.breakpoints.down("sm")]: {
+    padding: "0.625rem 0.875rem",
+    fontSize: "0.8rem",
+  },
+  "&:focus": {
+    borderColor: "#1976d2",
+    boxShadow: "0 0 0 2px rgba(25, 118, 210, 0.15)",
+  },
+}));

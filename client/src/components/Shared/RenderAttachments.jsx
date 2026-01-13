@@ -91,22 +91,13 @@ const RenderAttachments = ({file, url}) => {
     case "image":
       return (
         <>
-          <StyledImage
-            src={transformImage(url, 200)}
-            alt="attachment"
-          />
+          <StyledImage src={transformImage(url, 200)} alt="attachment" />
         </>
       );
 
     case "pdf":
       return (
-        <FilePreviewBox
-          component="a"
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{textDecoration: "none"}}
-        >
+        <FilePreviewBox>
           <IconWrapper>
             <FileOpenIcon sx={{fontSize: 48, color: "#d32f2f"}} />
             <Typography variant="caption" sx={{fontWeight: "bold"}}>
@@ -118,13 +109,7 @@ const RenderAttachments = ({file, url}) => {
 
     case "document":
       return (
-        <FilePreviewBox
-          component="a"
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{textDecoration: "none"}}
-        >
+        <FilePreviewBox>
           <IconWrapper>
             <DocumentIcon sx={{fontSize: 48, color: "#1976d2"}} />
             <Typography variant="caption" sx={{fontWeight: "bold"}}>
@@ -136,13 +121,7 @@ const RenderAttachments = ({file, url}) => {
 
     case "spreadsheet":
       return (
-        <FilePreviewBox
-          component="a"
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{textDecoration: "none"}}
-        >
+        <FilePreviewBox>
           <IconWrapper>
             <SpreadsheetIcon sx={{fontSize: 48, color: "#388e3c"}} />
             <Typography variant="caption" sx={{fontWeight: "bold"}}>
@@ -154,13 +133,7 @@ const RenderAttachments = ({file, url}) => {
 
     case "presentation":
       return (
-        <FilePreviewBox
-          component="a"
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{textDecoration: "none"}}
-        >
+        <FilePreviewBox>
           <IconWrapper>
             <PresentationIcon sx={{fontSize: 48, color: "#f57c00"}} />
             <Typography variant="caption" sx={{fontWeight: "bold"}}>
@@ -172,13 +145,7 @@ const RenderAttachments = ({file, url}) => {
 
     case "archive":
       return (
-        <FilePreviewBox
-          component="a"
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{textDecoration: "none"}}
-        >
+        <FilePreviewBox>
           <IconWrapper>
             <ArchiveIcon sx={{fontSize: 48, color: "#7b1fa2"}} />
             <Typography variant="caption" sx={{fontWeight: "bold"}}>
@@ -190,13 +157,7 @@ const RenderAttachments = ({file, url}) => {
 
     default:
       return (
-        <FilePreviewBox
-          component="a"
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{textDecoration: "none"}}
-        >
+        <FilePreviewBox>
           <IconWrapper>
             <ErrorIcon sx={{fontSize: 48, color: "#999"}} />
             <Typography variant="caption" sx={{fontWeight: "bold"}}>

@@ -41,14 +41,20 @@ const Chart = () => {
   };
 
   return (
-    <>
+    <Stack
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+    >
       <Stack
         ref={containerRef}
         boxSizing={"border-box"}
-        padding={"1rem"}
         spacing={1}
-        height={"90%"}
         sx={{
+          flexGrow: 1,
           overflowX: "hidden",
           overflowY: "auto",
           backgroundImage: `url("/imgs/tree.png")`,
@@ -56,6 +62,7 @@ const Chart = () => {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           borderRadius: 2,
+          p: { xs: 0.75, sm: 1 },
         }}
       >
         {/* message container */}
@@ -66,47 +73,71 @@ const Chart = () => {
       <form
         onSubmit={submitHandler}
         style={{
-          height: "10%",
-          // border:'1px solid red',
-          width: {sm: "95vw", lg: "50%"},
+          flexShrink: 0,
         }}
       >
         <Stack
           direction="row"
           alignItems="center"
-          spacing={1}
-          px={1}
+          spacing={{ xs: 0.5, sm: 1 }}
           sx={{
-            mx: "auto",
-            marginTop: "0.5rem",
-            height: "100%",
+            px: { xs: 0.5, sm: 1 },
+            py: { xs: 0.75, sm: 1 },
+            mt: { xs: 0.5, sm: 0.75 },
           }}
         >
-          <IconButton color="primary" onClick={handleFileOpen}>
-            <AttachFileIcon />
+          <IconButton 
+            color="primary" 
+            onClick={handleFileOpen}
+            size="small"
+            sx={{ 
+              p: { xs: 0.75, sm: 1 },
+            }}
+          >
+            <AttachFileIcon fontSize="small" />
           </IconButton>
 
-          <Stack flex={1}>
+          <Stack flex={1} sx={{ minWidth: 0 }}>
             <InputBox
               placeholder="Type a message..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              sx={{
+                fontSize: { xs: "0.8rem", sm: "0.95rem" },
+                padding: { xs: "0.625rem 0.875rem", sm: "0.75rem 1rem" },
+              }}
             />
           </Stack>
 
-          <IconButton type="submit" color="primary">
-            <SendIcon />
+          <IconButton 
+            type="submit" 
+            color="primary"
+            size="small"
+            sx={{ 
+              p: { xs: 0.75, sm: 1 },
+            }}
+          >
+            <SendIcon fontSize="small" />
           </IconButton>
 
-          <IconButton color="primary.text">
-            <MoreVertIcon onClick={() => setIsOpen(!isOpen)} />
+          <IconButton 
+            color="primary.text"
+            size="small"
+            sx={{ 
+              p: { xs: 0.75, sm: 1 },
+            }}
+          >
+            <MoreVertIcon 
+              fontSize="small" 
+              onClick={() => setIsOpen(!isOpen)} 
+            />
             <MoreOptions isOpen={isOpen} />
           </IconButton>
         </Stack>
       </form>
 
       <FileMenu anchorEl={fileMenuAnchor} chatId="testChatId" />
-    </>
+    </Stack>
   );
 };
 
