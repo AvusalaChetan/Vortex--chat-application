@@ -42,3 +42,24 @@ export const InputBox = styled("input")(({ theme }) => ({
     boxShadow: "0 0 0 2px rgba(25, 118, 210, 0.15)",
   },
 }));
+
+
+export const SearchField  = styled("input")`
+padding: 0.5rem 1rem;
+width: 20vmax;
+border: none;
+outline: none;
+border-radius: 1.5rem;
+background-color: #f1f1f1;
+font-size: 1rem;
+`
+export const CurveButton  = styled("button")`
+cursor: pointer;
+padding: 0.5rem 1rem;
+color: white;
+border: none;
+outline: none;
+border-radius: 1.5rem;
+background-color: #090707ed;
+font-size: 1rem;
+`

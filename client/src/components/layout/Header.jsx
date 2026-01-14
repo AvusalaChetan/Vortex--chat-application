@@ -53,7 +53,13 @@ const Header = ({mobileDrawerContent}) => {
   return (
     <>
       <Box sx={{flexGrow: 1, height: "4rem"}}>
-        <AppBar position="static" sx={{bgcolor: "black", height: "100%"}}>
+        <AppBar
+          position="static"
+          sx={{
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            height: "100%",
+          }}
+        >
           <Toolbar
             sx={{
               display: "flex",
@@ -118,7 +124,7 @@ const Header = ({mobileDrawerContent}) => {
           <NewGroup />
         </Suspense>
       )}
-      
+
       {isNotification && (
         <Suspense fallback={<Backdrop open />}>
           <Notificaiton />

@@ -10,6 +10,8 @@ import {
   Divider,
 } from "@mui/material";
 import {Link} from "../StyledComponent";
+import {v4 as uuidV4} from 'uuid'
+
 
 const GroupList = ({groupId, myGroup = []}) => {
   return (
@@ -28,7 +30,7 @@ const GroupList = ({groupId, myGroup = []}) => {
       >
         <List disablePadding>
           {myGroup.map((group) => (
-            <React.Fragment key={group._id}>
+            <React.Fragment key={uuidV4()}>
               <Divider component="li" />
               <GroupItem
                 _id={group._id}

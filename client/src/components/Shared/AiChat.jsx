@@ -30,7 +30,7 @@ const AiChat = ({isMobileDialog = false}) => {
       {!isMobileDialog && (
         <Box
           sx={{
-            py: 1.5,
+            py: 1,
             px: 2,
             borderBottom: 1,
             borderColor: "divider",
@@ -39,7 +39,6 @@ const AiChat = ({isMobileDialog = false}) => {
         >
           <Typography
             variant="h6"
-            color="primary.main"
             textAlign="center"
             fontWeight={600}
           >

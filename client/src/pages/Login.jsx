@@ -13,12 +13,12 @@ import {Stack} from "@mui/system";
 import {VisuallyHiddenInput} from "../components/StyledComponent";
 import {useForm} from "react-hook-form";
 import Oauth from "../components/auth/Oauth";
-import { useFileHandler } from '6pp'
+import {useFileHandler} from "6pp";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
-const [filePath, setFilePath] = useState('')
-const profile = useFileHandler('single')
+  const [filePath, setFilePath] = useState("");
+  const profile = useFileHandler("single");
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -41,7 +41,6 @@ const profile = useFileHandler('single')
     reset,
   } = useForm();
 
- 
   const onSubmit = (data) => {};
 
   return (
@@ -141,8 +140,7 @@ const profile = useFileHandler('single')
                   sign up{" "}
                 </Button>
               </form>
-<Oauth />
-
+              <Oauth />
             </>
           ) : (
             <>
