@@ -299,6 +299,7 @@ const Login = () => {
                   login
                 </Button>
               </form>
+              <Oauth />
             </>
           )}
         </Paper>

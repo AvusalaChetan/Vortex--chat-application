@@ -16,6 +16,8 @@ const register = TryCatch(async (req, res, next) => {
   sendToken(res, user, 201, "User created successfully");
 });
 
+
+
 const login = TryCatch(async (req, res, next) => {
   const {username, password} = req.body;
   if (!username || !password) return next(new ErrorHandler('All fields required', 400))
@@ -46,4 +48,16 @@ const getMyProfile = TryCatch(async (req, res,next) => {
   res.status(200).json({success: true, user});
 });
 
-export {register, login, logout, getMyProfile};
+
+const searchUser = TryCatch(async (req,res,next)=>{
+
+    const {name}= req.query;
+    console.log(name);
+ 
+    res
+    .status(200)
+    .json({success: true, message: "search user", name});
+})
+
+
+export {register, login, logout, getMyProfile,searchUser};

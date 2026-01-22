@@ -9,7 +9,7 @@ const chatSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
     },
-    creatror: {
+    creator: {
         type: Types.ObjectId,
         ref: 'User',
     },
@@ -20,4 +20,4 @@ const chatSchema = new mongoose.Schema({
 
 },{timestamps:true})
 
-export const Chat = mongoose.model('Chat', chatSchema)
+export const ChatModel = mongoose.model('Chat', chatSchema)
