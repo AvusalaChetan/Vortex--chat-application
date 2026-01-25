@@ -7,8 +7,8 @@ import {
 import { getOtherMembers } from "../lib/helper.js";
 import { TryCatch } from "../middlewares/error.js";
 import { ChatModel } from "../models/chatModel.js";
-import { userModel } from "../models/userModel.js";
 import { MessageModel } from "../models/messageModel.js";
+import { userModel } from "../models/userModel.js";
 import { deletFilesFromcloudinary, emitEvent } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
 
@@ -206,14 +206,21 @@ const leaveGroup = TryCatch(async (req, res, next) => {
 const sendAttachment = TryCatch(async (req, res, next) => {
   const chatId = req.body.chatId;
 
+  const files = req.file || [];
+
+  if(files.length < 1 )  return next(new ErrorHandler("please provide a valid attachment",400));
+
+  if(files.length > 5) return next(new ErrorHandler("you can upload maximum 5 files at a time",400));
+
+
   const [chat, me] = await Promise.all([
     // me means the sender of attachment or file
     ChatModel.findById(chatId),
     userModel.findById(req.userId, "name "),
   ]);
+
   if (!chat) return next(new ErrorHandler("chat not found", 404));
 
-  const files = req.file || [];
   if (files.length < 1)
     return next(new ErrorHandler("please provide a valid attachment", 400));
 
@@ -366,15 +373,7 @@ const getMessage = TryCatch(async (req, res, next) => {
 
 
 export {
-  newGroupChat,
-  getMyChats,
-  getMyGroups,
-  addMembers,
-  removeMembers,
-  leaveGroup,
-  sendAttachment,
-  getChatDetails,
-  renameGroup,
-  deletChat,
-  getMessage
+  addMembers, deletChat, getChatDetails, getMessage, getMyChats,
+  getMyGroups, leaveGroup, newGroupChat, removeMembers, renameGroup, sendAttachment
 };
+

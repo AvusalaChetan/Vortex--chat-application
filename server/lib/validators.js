@@ -25,7 +25,6 @@ const reomoveMembersValidator = () => [
 
 const sendAttachmentsValidator = () => [
     param("id", "please enter a chat id").notEmpty(),
-    check("files").notEmpty().isArray({ min: 1 ,max:5}).withMessage("please upload at least one file and maximum 5 files"),
 ];
 const getMessagesValidator = () => [
     param("id", "please enter a chat id").notEmpty(),
@@ -49,7 +48,6 @@ const registerValidator = () => [
     body("password", "Password must be at least 6 characters long")
         .isLength({ min: 6 })
         .withMessage("Password must be at least 6 characters long"),
-    check("avatar").notEmpty().withMessage("Avatar is required"),
 ];
 
 const loginValidator = () => [
@@ -66,6 +64,11 @@ const acceptReqValidator = () => [
     body("requestId", "request ID is required").notEmpty(),
     body("accept").notEmpty().withMessage('Accept field is required').isBoolean().withMessage("accept must be a boolean value"),
 ];
+
+
+const adminLoignValidator = () =>[
+    body("secretKey","Secret Key is required").notEmpty(),
+]
 
 const validateHandler = (req, res, next) => {
     const errors = validationResult(req);
@@ -91,4 +94,5 @@ export {
     renameValidator,
     sendReqValidator,
     acceptReqValidator,
+adminLoignValidator
 };

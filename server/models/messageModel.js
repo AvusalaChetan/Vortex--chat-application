@@ -20,7 +20,7 @@ const messageSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    
+
     chat: {
         type: Types.ObjectId,
         ref: 'Chat',

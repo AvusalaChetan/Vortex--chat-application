@@ -10,6 +10,15 @@ import {getOtherMembers} from "../lib/helper.js";
 
 const register = TryCatch(async (req, res, next) => {
   const {email, name, username, password, bio} = req.body;
+
+  const file = req.file;
+  console.log("file:", file);
+  if(!file) return next(new ErrorHandler("Avatar is required",400));
+  
+  const existingUser = await userModel.findOne({$or: [{email}, {username}]});
+  if (existingUser)
+    return next(new ErrorHandler("User already exists", 400));
+
   const avatar = {
     public_id: "kkkk",
     url: "lkasdf",

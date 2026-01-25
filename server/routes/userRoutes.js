@@ -30,6 +30,7 @@ router.post(
   validateHandler,
   register,
 );
+
 router.post("/login", loginValidator(), validateHandler, login);
 router.get("/logout", logout);
 
