@@ -11,15 +11,9 @@ import { userModel } from "../models/userModel.js";
 import { MessageModel } from "../models/messageModel.js";
 import { deletFilesFromcloudinary, emitEvent } from "../utils/features.js";
 import { ErrorHandler } from "../utils/utility.js";
-import { el } from "@faker-js/faker";
 
 const newGroupChat = TryCatch(async (req, res, next) => {
   const { name, members } = req.body;
-
-  if (members.length < 2)
-    return next(
-      new ErrorHandler("group chat must have at least 3 memebers", 400),
-    );
 
   const allMembers = [...members, req.userId];
   await ChatModel.create({
@@ -175,7 +169,7 @@ const removeMembers = TryCatch(async (req, res, next) => {
 
 const leaveGroup = TryCatch(async (req, res, next) => {
   const chatId = req.params.id;
-  console.log(chatId);
+
   const chat = await ChatModel.findById(chatId);
 
   if (!chat) return next(new ErrorHandler("chat not found", 404));
