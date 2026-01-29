@@ -1,18 +1,34 @@
-import {Grid} from "@mui/material";
-import Header from "./Header";
+import {Drawer, Grid, Skeleton, Stack} from "@mui/material";
+import {lazy, Suspense, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {useLocation, useParams, useSearchParams} from "react-router-dom";
+import {sampleGroups} from "../../constants/sampleData";
+import {useMyChatsQuery} from "../../redux/apis/api";
 import Title from "../Shared/Title";
 import ChartList from "../specfic/ChartList";
-import {sampleChats, sampleGroups} from "../../constants/sampleData";
-import {useLocation, useParams, useSearchParams} from "react-router-dom";
 import GroupList from "../specfic/GroupList";
-import ProfileCard from "../specfic/ProfileCard";
-import {lazy, Suspense} from "react";
+import Header from "./Header";
+import {setIsMobile} from "../../redux/reducers/misc";
+import {useErrors} from "../../hooks/hook";
+import Profile from "../specfic/Profile";
 
 const AppLayout = (WrappedComponent) => {
   const AiChat = lazy(() => import("../Shared/AiChat"));
   return (props) => {
     const params = useParams();
+    const dispatch = useDispatch();
     const chatId = params.chatId;
+
+    const {isMobile} = useSelector((state) => state.misc);
+    const {user, loader} = useSelector((state) => state.auth);
+    const {isLoading, data, isError, error, refetch} = useMyChatsQuery("");
+
+    useErrors([{isError, error}]);
+
+    // Safety check - ensure chats is an array
+    const chats = Array.isArray(data?.chats) ? data?.chats : [];
+
+    const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
     const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -23,6 +39,8 @@ const AppLayout = (WrappedComponent) => {
       console.log("delet chat", _id, groupChat);
     };
 
+    const handleMobileClose = () => dispatch(setIsMobile(false));
+
     return (
       <>
         <Title
@@ -30,18 +48,30 @@ const AppLayout = (WrappedComponent) => {
           description="Manage your group chats effectively"
         />
         <Header
+          isMobileDrawerOpen={isMobileDrawerOpen}
+          setIsMobileDrawerOpen={setIsMobileDrawerOpen}
           mobileDrawerContent={
             location.pathname === "/groups" ? (
               <GroupList myGroup={sampleGroups} groupId={groupId} />
-            ) : (
-              <ChartList
-                chats={sampleChats}
-                chatId={chatId}
-                handleDleteChat={handleDleteChat}
-              />
-            )
+            ) : isLoading ? (
+              <Skeleton />
+            ) : null
           }
         />
+
+        {isLoading ? (
+          <Skeleton />
+        ) : (
+          <Drawer open={isMobile} onClose={handleMobileClose}>
+            <ChartList
+              w="70vw"
+              chats={data?.chats}
+              chatId={chatId}
+              handleDleteChat={handleDleteChat}
+            />
+          </Drawer>
+        )}
+
         <Grid
           container
           sx={{
@@ -55,7 +85,7 @@ const AppLayout = (WrappedComponent) => {
             boxSizing: "border-box",
             alignItems: "stretch",
             justifyContent: "center",
-            columnGap: {xs: 0.5, md: 2, },
+            columnGap: {xs: 0.5, md: 2},
           }}
         >
           {/* //left */}
@@ -75,9 +105,16 @@ const AppLayout = (WrappedComponent) => {
           >
             {location.pathname === "/groups" ? (
               <GroupList myGroup={sampleGroups} groupId={groupId} />
+            ) : isLoading ? (
+              <Skeleton />
+            ) : isError ? (
+              <div style={{ padding: "1rem", textAlign: "center", color: "#999" }}>
+                Failed to load chats. Please try refreshing.
+              </div>
             ) : (
               <ChartList
-                chats={sampleChats}
+                w="70vw"
+                chats={chats}
                 chatId={chatId}
                 handleDleteChat={handleDleteChat}
               />
@@ -115,9 +152,18 @@ const AppLayout = (WrappedComponent) => {
               boxShadow: {lg: 1},
             }}
           >
-            <Suspense fallback={<div>Loading AI Chat...</div>}>
-              <AiChat />
-            </Suspense>
+            {loader ? (
+              <Skeleton variant="rectangular" width="100%" height="100%" />
+            ) : user ? (
+              <>
+                {/* <Profile user={user} /> */}
+                <Suspense fallback={<div>Loading AI Chat...</div>}>
+                  <AiChat />
+                </Suspense>
+              </>
+            ) : (
+              <div>No user data</div>
+            )}
           </Grid>
         </Grid>
 

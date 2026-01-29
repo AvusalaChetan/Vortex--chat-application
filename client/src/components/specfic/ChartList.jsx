@@ -9,13 +9,12 @@ const ChartList = ({
   newMessagesAlert = [],
   handleDleteChat,
 }) => {
+  // Safety check - ensure chats is an array
+  const chatList = Array.isArray(chats) ? chats : [];
 
-  
   return (
-    <Stack width={w} direction={"column"}
-
-    >
-      {chats?.map((data) => {
+    <Stack width={w} direction={"column"}>
+      {chatList?.map((data) => {
         const {avatar, _id, name, groupChat, members} = data;
 
         const alerts = newMessagesAlert
@@ -25,7 +24,10 @@ const ChartList = ({
           : [];
 
         const newMessage = alerts.find(({chatId}) => chatId === _id);
-        const isOnline = members?.some(() => onlineUsers.includes(_id));
+        // Fix: Check if any member is in onlineUsers array
+        const isOnline = members?.some((memberId) =>
+          onlineUsers.includes(memberId),
+        );
 
         return (
           <ChatItem
@@ -38,7 +40,6 @@ const ChartList = ({
             groupChat={groupChat}
             sameSender={chatId === _id}
             handleDleteChat={handleDleteChat}
-
           />
         );
       })}

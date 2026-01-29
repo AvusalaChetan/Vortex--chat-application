@@ -1,24 +1,28 @@
-import {useState} from "react";
+import {CameraAlt} from "@mui/icons-material";
 import {
+  Avatar,
+  Button,
   Container,
+  IconButton,
   Paper,
   TextField,
   Typography,
-  Button,
-  Avatar,
-  IconButton,
 } from "@mui/material";
-import {CameraAlt} from "@mui/icons-material";
 import {Stack} from "@mui/system";
-import {VisuallyHiddenInput} from "../components/StyledComponent";
+import axios from "axios";
+import {useState} from "react";
 import {useForm} from "react-hook-form";
+import toast from "react-hot-toast";
+import {useDispatch} from "react-redux";
 import Oauth from "../components/auth/Oauth";
-import {useFileHandler} from "6pp";
+import {VisuallyHiddenInput} from "../components/StyledComponent";
+import {server} from "../constants/config";
+import {userExists} from "../redux/reducers/auth";
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(false);
-  const [filePath, setFilePath] = useState("");
-  const profile = useFileHandler("single");
+  const [isLogin, setIsLogin] = useState(true);
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const [avatarFile, setAvatarFile] = useState(null);
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
@@ -37,11 +41,89 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: {errors},
+    formState: {errors,isSubmitting },
     reset,
+    
   } = useForm();
 
-  const onSubmit = (data) => {};
+  const dispatch = useDispatch();
+
+  // Handle avatar file selection
+  const handleAvatarChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setAvatarPreview(event.target?.result || "");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleLogin = async (data) => {
+    console.log(data);
+    const config = {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    try {
+      const res = await axios.post(`${server}/api/v1/user/login`, data, config);
+      dispatch(userExists(true));
+      const message = res.data?.message || "Login successful";
+      toast.success(String(message));
+      reset();
+      console.log(res.data);
+    } catch (error) {
+      console.error("Login error:", error);
+      const errorMsg =
+        error?.response?.data?.message || error?.message || "Login failed";
+      toast.error(String(errorMsg));
+    }
+  };
+
+  const handleSignUp = async (data) => {
+    console.log("Signup data:", data);
+    const config = {
+      withCredentials: true,
+    };
+
+    try {
+      // Build FormData to include avatar file
+      const formDataObj = new FormData();
+      formDataObj.append("name", data.name);
+      formDataObj.append("bio", data.bio);
+      formDataObj.append("username", data.username);
+      formDataObj.append("email", data.email);
+      formDataObj.append("password", data.password);
+
+      if (avatarFile) {
+        formDataObj.append("avatar", avatarFile);
+        console.log("Avatar appended:", avatarFile.name);
+      } else {
+        console.warn("No avatar file selected");
+      }
+
+      const res = await axios.post(
+        `${server}/api/v1/user/register`,
+        formDataObj,
+        config,
+      );
+      console.log("Signup response:", res.data);
+      dispatch(userExists(true));
+      toast.success(res.data.message); // Extract message from response
+      reset();
+      setAvatarFile(null);
+      setAvatarPreview("");
+    } catch (error) {
+      console.log("signup error:", error);
+      const errorMessage =
+        error?.response?.data?.message || error?.message || "Signup failed";
+      toast.error(errorMessage);
+    }
+  };
 
   return (
     <>
@@ -72,7 +154,7 @@ const Login = () => {
               {/* login form */}
               <Typography variant="h5">Login</Typography>
 
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(handleLogin)}>
                 <TextField
                   required
                   fullWidth
@@ -81,7 +163,6 @@ const Login = () => {
                   type="text"
                   margin="normal"
                   variant="outlined"
-                  // work for mui
                   error={!!errors.username}
                   helperText={
                     errors.username
@@ -140,7 +221,6 @@ const Login = () => {
                   sign up{" "}
                 </Button>
               </form>
-              <Oauth />
             </>
           ) : (
             <>
@@ -162,7 +242,7 @@ const Login = () => {
                     height: "10rem",
                     objectFit: "contain",
                   }}
-                  src={profile.preview}
+                  src={avatarPreview}
                 />
 
                 <IconButton
@@ -179,13 +259,13 @@ const Login = () => {
                   <VisuallyHiddenInput
                     type="file"
                     accept="image/*"
-                    onChange={profile.changeHandler}
+                    onChange={handleAvatarChange}
                   />
                 </IconButton>
               </Stack>
               {/* camera  end icon */}
 
-              <form onSubmit={handleSubmit(onSubmit)}>
+              <form onSubmit={handleSubmit(handleSignUp)}>
                 <TextField
                   required
                   fullWidth
@@ -259,6 +339,27 @@ const Login = () => {
                     minLength: {value: 4, message: "Min 4"},
                   })}
                 />
+                <TextField
+                  required
+                  fullWidth
+                  label="email"
+                  autoComplete="email"
+                  type="text"
+                  margin="normal"
+                  variant="outlined"
+                  error={!!errors.email}
+                  helperText={
+                    errors.email
+                      ? errors.email.type === "required"
+                        ? "This is required"
+                        : errors.email.message
+                      : ""
+                  }
+                  {...register("email", {
+                    required: true,
+                    minLength: {value: 4, message: "Min 4"},
+                  })}
+                />
 
                 <TextField
                   required
@@ -289,8 +390,9 @@ const Login = () => {
                   color="primary"
                   type="submit"
                   sx={{mt: 2, width: "100%"}}
+                  disabled={isSubmitting}
                 >
-                  sign up
+                  {isSubmitting ? "submitting...." : "sign up"}
                 </Button>
                 <Typography textAlign={"center"} m={"1rem"}>
                   or

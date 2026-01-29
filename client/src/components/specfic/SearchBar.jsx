@@ -1,31 +1,65 @@
-import {useState} from "react";
+import {useInputValidation} from "6pp";
+import {Search as SearchIcon} from "@mui/icons-material";
 import {
   Dialog,
-  Stack,
-  TextField,
   DialogTitle,
   InputAdornment,
   List,
   ListItem,
+  Stack,
+  TextField,
 } from "@mui/material";
-import {Search as SearchIcon} from "@mui/icons-material";
-import {useInputValidation} from "6pp";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {
+  useLazySearchUserQuery,
+  useSendFriendRequestMutation,
+} from "../../redux/apis/api";
+import {setIsSearch} from "../../redux/reducers/misc";
 import UserItem from "../Shared/UserItem";
-import {sampleUsers} from "../../constants/sampleData";
+import toast from "react-hot-toast";
+import { useAsyncMutation } from "../../hooks/hook";
 
-const SearchBar = ({InputProps = {}, open = true, onClose }) => {
-  const [users, setUsers] = useState(sampleUsers);
+const SearchBar = ({InputProps = {}, open = true, onClose}) => {
+  const {isSearch} = useSelector((state) => state.misc);
+  const [searchUser] = useLazySearchUserQuery();
+
+  const [sendFriendRequest,isLoadingSendFriendRequest] = useAsyncMutation(useSendFriendRequestMutation);
+
+  const dispatch = useDispatch();
   const search = useInputValidation("");
+  const [users, setUsers] = useState([]);
 
-  const addFriendHandler = (userId) => {
-    console.log("Add friend with ID:", userId);
+  const addFriendHandler = async (id) => {
+ await sendFriendRequest("Sending friend request...", { userId: id });
   };
-  const isLoadingSendFriendRequest = false;
+
+
+  const searchCloseHandler = () => dispatch(setIsSearch(false));
+
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      searchUser(search.value)
+        .then((res) => {
+          if (res.data?.users) {
+            console.log(res.data.users);
+            setUsers(res.data.users);
+          } else {
+            setUsers([]);
+          }
+        })
+        .catch((err) => {
+          console.log("Search error:", err);
+          setUsers([]);
+        });
+    }, 1000);
+    return () => clearTimeout(timeOutId);
+  }, [search.value]);
 
   return (
     <Dialog
-      open={open}
-      onClose={onClose}
+      open={isSearch}
+      onClose={searchCloseHandler}
       PaperProps={{
         sx: {
           width: "100%",
@@ -35,18 +69,6 @@ const SearchBar = ({InputProps = {}, open = true, onClose }) => {
         },
       }}
     >
-     
-        <button style={{ 
-          display:'inline' ,
-          width: 'fit-content',
-          position:'absolute',
-          right: '10px',
-          top: '20px',
-          fontSize: '16px',
-          textAlign:'center'
-        }}
-        >x</button>
-      
       <DialogTitle>Search</DialogTitle>
 
       <Stack px={2} pb={2}>

@@ -1,53 +1,73 @@
-import {lazy, Suspense, useState} from "react";
-import {useNavigate, useLocation} from "react-router-dom";
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Toolbar,
-  Typography,
-  Tooltip,
-  Backdrop,
-  Drawer,
-  Dialog,
-  DialogTitle,
-} from "@mui/material";
 import {
   Add as AddIcon,
+  SmartToy as AiIcon,
+  Close as CloseIcon,
   Group as GroupIcon,
   Logout as LogoutIcon,
   Menu as MenuIcon,
   Notifications as NotificationsIcons,
   Search as SearchIcon,
-  SmartToy as AiIcon,
-  Close as CloseIcon,
 } from "@mui/icons-material";
-import {darkOrange} from "../../constants/color";
+import {
+  AppBar,
+  Backdrop,
+  Box,
+  Dialog,
+  DialogTitle,
+  Drawer,
+  IconButton,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
+import {lazy, Suspense, useState, useCallback} from "react";
+import {toast} from "react-hot-toast";
+import {useNavigate} from "react-router-dom";
+import {server} from "../../constants/config";
+import {useDispatch, useSelector} from "react-redux";
+import {userNotExists} from "../../redux/reducers/auth";
+import {
+  setIsMobile,
+  setIsSearch,
+  setIsNotification,
+} from "../../redux/reducers/misc";
+import {getErrorMessage} from "../../hooks/hook";
 
 const SearchBar = lazy(() => import("../specfic/SearchBar"));
-const Notificaiton = lazy(() => import("../specfic/Notifications"));
+const Notifications = lazy(() => import("../specfic/Notifications"));
 const NewGroup = lazy(() => import("../specfic/NewGroup"));
 const AiChat = lazy(() => import("../Shared/AiChat"));
 
-const Header = ({mobileDrawerContent}) => {
+const Header = ({isMobileDrawerOpen, mobileDrawerContent}) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {isSearch, isMobile, isNotification} = useSelector(
+    (state) => state.misc,
+  );
 
-  const [isMobile, setIsMobile] = useState(false);
-  const [isSearch, setIsSearch] = useState(false);
   const [isNewGroup, setIsNewGroup] = useState(false);
-  const [isNotification, setIsNotification] = useState(false);
   const [isAiChat, setIsAiChat] = useState(false);
 
-  const handleMobile = () => setIsMobile((p) => !p);
-  const openSearchBar = () => setIsSearch((p) => !p);
+  const handleMobile = () => dispatch(setIsMobile(!isMobile));
+  const openSearchBar = () => dispatch(setIsSearch(!isSearch));
   const openNewGroup = () => setIsNewGroup((p) => !p);
-  const toggleNotification = () => setIsNotification((p) => !p);
+  const toggleNotification = () => dispatch(setIsNotification(true));
   const toggleAiChat = () => setIsAiChat((p) => !p);
 
   const navigateToGroup = () => navigate("/groups");
 
-  const handleLogOut = () => {
-    console.log("handleLogOut");
+  const handleLogOut = async () => {
+    try {
+      const res = await axios.get(`${server}/api/v1/user/logout`, {
+        withCredentials: true,
+      });
+      dispatch(userNotExists());
+      toast.success(res.data.message);
+      navigate("/login");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   };
 
   return (
@@ -67,11 +87,14 @@ const Header = ({mobileDrawerContent}) => {
               justifyContent: "space-between",
             }}
           >
-            <Typography variant="h6" sx={{display: {xs: "none", sm: "block"}}}>
+            <Typography
+              variant="h6"
+              sx={{display: {xs: "none", md: "none", lg: "block"}}}
+            >
               vortex
             </Typography>
 
-            <Box sx={{display: {xs: "block", sm: "none"}}}>
+            <Box sx={{display: {xs: "block", sm: "block", md: "none"}}}>
               <IconButton color="inherit" onClick={handleMobile}>
                 <MenuIcon />
               </IconButton>
@@ -93,7 +116,7 @@ const Header = ({mobileDrawerContent}) => {
                 icon={<GroupIcon />}
                 onClick={navigateToGroup}
               />
-              <Box sx={{display: {xs: "inline-block", lg: "none"}}}>
+              <Box sx={{display: {xs: "inline-block", lg: "inline-block"}}}>
                 <IconBtn
                   title="AI Chat"
                   icon={<AiIcon />}
@@ -127,7 +150,7 @@ const Header = ({mobileDrawerContent}) => {
 
       {isNotification && (
         <Suspense fallback={<Backdrop open />}>
-          <Notificaiton />
+          <Notifications open={isNotification} />
         </Suspense>
       )}
 
@@ -166,7 +189,7 @@ const Header = ({mobileDrawerContent}) => {
       {/* * Mobile Drawer */}
       <Drawer
         anchor="left"
-        open={isMobile}
+        open={isMobileDrawerOpen}
         onClose={handleMobile}
         sx={{
           display: {xs: "block", md: "none"},
@@ -182,9 +205,9 @@ const Header = ({mobileDrawerContent}) => {
             bgcolor: "background.paper",
             overflow: "auto",
           }}
-          onClick={handleMobile}
         >
           {mobileDrawerContent}
+          {/* Sidebar will render from AppLayout */}
         </Box>
       </Drawer>
     </>

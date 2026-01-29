@@ -14,7 +14,7 @@ import {
 const UserItem = ({user, handler, handlerIsLoading, isSelected}) => {
   const {name, _id, avatar} = user;
   return (
-    <List>
+    <List sx={{width:'100%'}}>
       <ListItem
         sx={{
           p: 1.5,
@@ -29,14 +29,14 @@ const UserItem = ({user, handler, handlerIsLoading, isSelected}) => {
       >
         <Stack
           direction="row"
-          spacing={2}
+          spacing={1}
           alignItems="center"
           justifyContent="space-between"
           width="100%"
         >
           <Avatar
             src={avatar}
-            sx={{width: 44, height: 44, borderRadius: 2, boxShadow: 2}}
+            sx={{width: 44, height: 44, borderRadius:"20%", boxShadow: 2}}
           />
           <Typography
             variant="body1"

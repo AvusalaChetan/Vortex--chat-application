@@ -4,7 +4,6 @@ import { envMode } from "../app.js";
 const errorMiddleWare = (err, req, res, next) => {
   err.message ||= "internal server error";
   err.statusCode ||= 500;
-  console.error(err);
 
   if (err.code === 11000) {
     err.message = `${Object.keys(err.keyValue)} already exists`;
@@ -16,10 +15,17 @@ const errorMiddleWare = (err, req, res, next) => {
     err.statusCode = 400;
   }
 
-  return res.status(err.statusCode).json({
+  const response = {
     success: false,
-    message: envMode === "DEVELOPMENT" ? err : err.message,
-  });
+    message: err.message,
+  };
+
+  // Add stack trace in development mode
+  if (envMode === "DEVELOPMENT") {
+    response.stack = err.stack;
+  }
+
+  return res.status(err.statusCode).json(response);
 };
 
 const TryCatch = (passedFn) => async (req, res, next) => {
@@ -30,4 +36,4 @@ const TryCatch = (passedFn) => async (req, res, next) => {
   }
 };
 
-export {errorMiddleWare, TryCatch};
+export { errorMiddleWare, TryCatch };
