@@ -1,6 +1,6 @@
-import {Link} from "../StyledComponent";
-import {memo} from "react";
-import {Stack, Typography, Box, Paper, Avatar, Badge, Chip} from "@mui/material";
+import { Avatar, Badge, Chip, Paper, Stack, Typography } from "@mui/material";
+import { memo } from "react";
+import { Link } from "../StyledComponent";
 
 const ChatItem = ({
   avatar = [],

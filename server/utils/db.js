@@ -1,4 +1,3 @@
-import { ur } from '@faker-js/faker';
 import mongoose from 'mongoose';
 
 const connectDB = async (uri) => {

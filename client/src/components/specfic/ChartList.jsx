@@ -1,7 +1,7 @@
 import {Stack} from "@mui/material";
 import ChatItem from "../Shared/ChatItem";
 
-const ChartList = ({
+const   ChartList = ({
   w = "100%",
   chats = [],
   chatId,

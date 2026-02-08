@@ -231,7 +231,7 @@ const sendAttachment = TryCatch(async (req, res, next) => {
     content: "",
     sender: me._id,
     chat: chatId,
-    attachments,
+    attachment: attachments,
   };
 
   const messageForRealTime = {

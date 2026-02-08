@@ -20,40 +20,30 @@ import adminRoutes from "./routes/adminRoute.js";
 
 // import seeders
 
-import {createUser} from "./seeders/userSeed.js";
-import {
-  createSinglechat,
-  createMessages,
-  createMessagesInAChat,
-  createGroupChat,
-} from "./seeders/chat.js";
+// import {createUser} from "./seeders/userSeed.js";
+// import {
+//   createSinglechat,
+//   createMessages,
+//   createMessagesInAChat,
+//   createGroupChat,
+// } from "./seeders/chat.js";
 
 //import events constants
 import {NEW_MESSAGE, NEW_MESSAGE_ALERT} from "./constants/events.js";
 import {getSockets} from "./lib/helper.js";
 import {MessageModel} from "./models/messageModel.js";
+import {soketAuthenticator} from "./middlewares/auth.js";
+
+import {corsOptions} from "./constants/config.js";
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
+  cors: corsOptions,
 });
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:4173",
-      process.env.CLIENT_URL,
-    ],
-    credentials: true,
-  }),
-);
+app.use(cors(corsOptions));
 app.use(express.urlencoded({extended: true}));
 
 const PORT = process.env.PORT || 8080;
@@ -81,30 +71,26 @@ app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/chat", chatsRoutes);
 app.use("/api/v1/admin", adminRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Hello, World!");
-});
-
-
-// socktet io connection  
+// socktet io connection
 
 io.use((socket, next) => {
-  const token = socket.handshake.auth.token;
-  next();
+  cookieParser()(
+    socket.request,
+    socket.request.res,
+    async (err) => await soketAuthenticator(err, socket, next),
+  );
 });
 
 io.on("connection", (socket) => {
-  const user = {
-    id: "afljk;sjdl",
-    name: "Anonymous",
-  };
-  userSocketIds.set(user.id.toString(), socket.id);
+  const user = socket.user;
+  userSocketIds.set(user._id.toString(), socket.id);
 
   socket.on(NEW_MESSAGE, async ({chatId, members, message}) => {
+    console.log("New message received on server:", {chatId, members, message});
     const messageForRealTime = {
       _id: uuidv4(),
       sender: {
-        _id: user.id,
+        _id: user._id,
         name: user.name,
       },
       chat: chatId,
@@ -112,15 +98,16 @@ io.on("connection", (socket) => {
       members: members,
       createdAt: new Date().toISOString(),
     };
-    console.log("messageForRealTime", messageForRealTime);
+    console.log("messageForRealTime ", messageForRealTime.members);
 
     const messageForDB = {
-      constent: message,
+      content: message,
       chat: chatId,
-      sender: user.id,
+      sender: user._id,
     };
 
     const membersSockets = getSockets(members);
+
     io.to(membersSockets).emit(NEW_MESSAGE, {
       chatId,
       message: messageForRealTime,
@@ -130,6 +117,7 @@ io.on("connection", (socket) => {
 
     try {
       await MessageModel.create(messageForDB);
+      console.log("Message saved to DB", messageForDB);
     } catch (error) {
       console.log("Error saving message to DB:", error);
     }
@@ -137,7 +125,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("User disconnected", socket.id);
-    userSocketIds.delete(user.id.toString());
+    userSocketIds.delete(user._id.toString());
   });
 });
 

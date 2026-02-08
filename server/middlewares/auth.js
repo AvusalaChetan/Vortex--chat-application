@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
-import {ErrorHandler} from "../utils/utility.js";
-import {TryCatch} from "./error.js";
+import { VORTEX_TOKEN } from "../constants/config.js";
+import { userModel } from "../models/userModel.js";
+import { ErrorHandler } from "../utils/utility.js";
+import { TryCatch } from "./error.js";
 
 const isAuthenticated = TryCatch(async (req, res, next) => {
   const token = req.cookies["vortex-token"];
@@ -34,4 +36,31 @@ const isAdmin = TryCatch(async (req, res, next) => {
   next();
 });
 
-export {isAuthenticated, isAdmin};
+
+const soketAuthenticator = async (err, socket, next) => {
+  try {
+    if (err) return next(err);
+
+    const authToken = socket.request.cookies[VORTEX_TOKEN];
+
+    if (!authToken) {
+      return next(new ErrorHandler("Socket authentication failed: No token provided", 401));
+    }
+
+    const decodedData = jwt.verify(authToken, process.env.JWT_SECRET);
+    const user = await userModel.findById(decodedData._id);
+
+    if (!user) {
+      return next(new ErrorHandler("Socket authentication failed: User not found", 401));
+    }
+
+    socket.user = user;
+    return next();
+
+  } catch (error) {
+    console.log("Socket authentication error:", error);
+    return next(new ErrorHandler("Socket authentication failed", 401));
+  }
+}
+export { isAdmin, isAuthenticated, soketAuthenticator };
+

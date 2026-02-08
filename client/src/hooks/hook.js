@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import {NEW_MESSAGE} from "../constants/events";
 
 // Helper function to safely extract error message
 const getErrorMessage = (error) => {
@@ -58,4 +59,20 @@ const useAsyncMutation = (mutatationHook) => {
     return [mutationHandler, isLoading];
 }
 
-export { useErrors, useAsyncMutation, getErrorMessage };
+
+
+const useSocketEvents = (socket,handlers)=>{
+    useEffect(() => {
+      if (!socket) return;
+    Object.entries(handlers).forEach(([event, handler]) => {
+      socket.on(event, handler);
+    });
+    return () => {
+        Object.entries(handlers).forEach(([event, handler]) => {
+          socket.off(event, handler);
+        });
+    };
+    }, []);
+}
+
+export { useErrors, useAsyncMutation, getErrorMessage,useSocketEvents };

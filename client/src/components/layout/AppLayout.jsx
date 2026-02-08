@@ -11,17 +11,24 @@ import Header from "./Header";
 import {setIsMobile} from "../../redux/reducers/misc";
 import {useErrors} from "../../hooks/hook";
 import Profile from "../specfic/Profile";
+import { getSocket } from "../../Socket";
+
 
 const AppLayout = (WrappedComponent) => {
   const AiChat = lazy(() => import("../Shared/AiChat"));
   return (props) => {
     const params = useParams();
     const dispatch = useDispatch();
+
     const chatId = params.chatId;
+
+
+    const soket = getSocket();
+    console.log("Socket in AppLayout:", soket.id);
 
     const {isMobile} = useSelector((state) => state.misc);
     const {user, loader} = useSelector((state) => state.auth);
-    const {isLoading, data, isError, error, refetch} = useMyChatsQuery("");
+    const {isLoading, data, isError, error} = useMyChatsQuery("");
 
     useErrors([{isError, error}]);
 
@@ -108,7 +115,9 @@ const AppLayout = (WrappedComponent) => {
             ) : isLoading ? (
               <Skeleton />
             ) : isError ? (
-              <div style={{ padding: "1rem", textAlign: "center", color: "#999" }}>
+              <div
+                style={{padding: "1rem", textAlign: "center", color: "#999"}}
+              >
                 Failed to load chats. Please try refreshing.
               </div>
             ) : (
@@ -117,6 +126,7 @@ const AppLayout = (WrappedComponent) => {
                 chats={chats}
                 chatId={chatId}
                 handleDleteChat={handleDleteChat}
+                
               />
             )}
           </Grid>
@@ -133,7 +143,7 @@ const AppLayout = (WrappedComponent) => {
               boxShadow: {md: 1, lg: 1},
             }}
           >
-            <WrappedComponent {...props} />
+            <WrappedComponent {...props}  chatId={chatId}  user={user} />
           </Grid>
 
           {/* AI Chat section */}
